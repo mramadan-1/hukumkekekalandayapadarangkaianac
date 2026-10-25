@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lab Virtual Kekekalan Daya Rangkaian AC</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><h1>Lab Virtual: Hukum Kekekalan Daya pada Rangkaian AC</h1><p>Rangkaian Listrik AC, fasor RMS, konvensi tanda pasif</p></header>
+<main>
+<section id="ctl" class="panel" aria-label="Panel kontrol">
+<h2>Panel kontrol</h2>
+<label for="topo">Konfigurasi rangkaian</label>
+<select id="topo"><option value="R">Resistif (R)</option><option value="RL">RL seri</option><option value="RC">RC seri</option><option value="RLCs">RLC seri</option><option value="RLCp">RLC paralel</option></select>
+<div id="sliders"></div>
+<p id="err" role="alert"></p>
+<div class="btns"><button id="bOn"></button><button id="bRun"></button><button id="bRep">Ulang animasi</button><button id="bRst">Reset parameter</button></div>
+<label for="spd">Kecepatan animasi: <b id="spdv"></b></label>
+<input type="range" id="spd" min="0.1" max="3" step="0.1" value="1">
+<button id="bForm" class="wide">Tampilkan/sembunyikan rumus</button>
+</section>
+<section id="viz">
+<div class="panel"><h2>Diagram rangkaian</h2><svg id="ckt" viewBox="0 0 520 230" role="img" aria-label="Diagram rangkaian"></svg><p id="live" class="note"></p></div>
+<div class="panel" id="formulas" hidden><h2>Rumus (fasor RMS)</h2><ol>
+<li><b>ω = 2πf</b>: ω rad/s, f Hz. Frekuensi sudut.</li>
+<li><b>X<sub>L</sub> = ωL</b>: ohm (Ω), L henry. Reaktansi induktif.</li>
+<li><b>X<sub>C</sub> = 1/(ωC)</b>: Ω, C farad. Reaktansi kapasitif.</li>
+<li><b>Z = R + j(X<sub>L</sub> − X<sub>C</sub>)</b>: Ω. Impedansi seri. Paralel: 1/Z = ΣY, Y<sub>R</sub>=1/R, Y<sub>L</sub>=1/(jX<sub>L</sub>), Y<sub>C</sub>=j/X<sub>C</sub>.</li>
+<li><b>|Z| = √[R² + (X<sub>L</sub> − X<sub>C</sub>)²]</b>: Ω. Besar impedansi seri.</li>
+<li><b>I = V<sub>RMS</sub>/|Z|</b>: A. Arus seri. Paralel: I<sub>cabang</sub> = V/Z<sub>cabang</sub>, arus total dijumlahkan sebagai fasor.</li>
+<li><b>P = VI cos φ = I²R</b>: W. Daya aktif rata-rata.</li>
+<li><b>Q = VI sin φ = I²(X<sub>L</sub> − X<sub>C</sub>)</b>: var. Daya reaktif (+ induktif, − kapasitif).</li>
+<li><b>|S| = VI = √(P² + Q²)</b>: VA. Daya semu. Faktor daya = P/|S| = cos φ.</li>
+<li><b>S = P + jQ = V I*</b>: VA. V dan I fasor RMS, I* konjugat arus. Dipakai untuk bukti keseimbangan: ΣS = 0 (maka ΣP = 0 dan ΣQ = 0). Nilai |S| tiap elemen tidak boleh dijumlahkan langsung.</li></ol></div>
+<div class="panel"><h2>Hasil perhitungan</h2><div id="res" class="grid"></div></div>
+<div class="panel"><h2>Tegangan dan arus terhadap waktu</h2><canvas id="cw" aria-label="Grafik v(t) dan i(t)"></canvas><p class="note">v(t) dan i(t) digambar dengan skala puncak masing-masing (dinormalkan) selama 2 periode. Titik bergerak menandai waktu sesaat.</p></div>
+<div class="panel"><h2>Daya sesaat p(t) = v(t)·i(t)</h2><canvas id="cp" aria-label="Grafik daya sesaat"></canvas><p class="note">Hijau: p &gt; 0 (energi mengalir dari sumber ke rangkaian). Merah: p &lt; 0 (energi dikembalikan ke sumber oleh L atau C). Garis putus-putus: daya aktif rata-rata P. Frekuensi p(t) dua kali frekuensi sumber.</p></div>
+<div class="two"><div class="panel"><h2>Diagram fasor</h2><canvas id="cph"></canvas></div><div class="panel"><h2>Segitiga daya</h2><canvas id="ctr"></canvas></div></div>
+<div class="panel"><h2>Grafik daya (daya disuplai sumber)</h2><div id="bars"></div></div>
+<div class="panel"><h2>Pembuktian keseimbangan daya</h2><div id="bal"></div></div>
+</section>
+</main>
+<div class="tabsw panel">
+<div class="tabs" role="tablist"><button data-t="teori" class="on">Materi</button><button data-t="eks">Eksperimen</button><button data-t="kuis">Kuis</button><button data-t="tan">Tantangan</button></div>
+<div id="p_teori" class="pane">
+<details open><summary>1. Hukum kekekalan daya</summary><p>Energi tidak hilang dan tidak muncul begitu saja. Pada keadaan tunak sinusoidal, daya kompleks yang diserap seluruh elemen (termasuk sumber, yang bernilai negatif saat memberi daya) berjumlah nol: ΣS = 0, sehingga ΣP = 0 dan ΣQ = 0.</p></details>
+<details><summary>2. Daya aktif, reaktif, dan semu</summary><p>P (W) adalah laju rata-rata energi yang diubah menjadi kerja atau panas. Q (var) mengukur amplitudo pertukaran energi bolak-balik dengan medan magnet L atau medan listrik C. |S| (VA) = VI adalah kapasitas yang dibebankan ke sumber. Ketiganya berbeda satuan dan makna; hubungannya |S|² = P² + Q².</p></details>
+<details><summary>3. Tegangan, arus, impedansi, faktor daya</summary><p>I = V/|Z|. Sudut φ = sudut V − sudut I = arg Z (rangkaian seri). Faktor daya = cos φ = P/|S|. Induktif: arus tertinggal, φ &gt; 0, Q &gt; 0. Kapasitif: arus mendahului, φ &lt; 0, Q &lt; 0.</p></details>
+<details><summary>4. Mengapa L dan C ideal tidak menyerap daya aktif rata-rata</summary><p>Arus dan tegangan pada L atau C berbeda fase 90°. Daya sesaat p(t) = (Q/2)·sin 2ωt-nya berganti positif dan negatif sama besar, sehingga rata-ratanya nol.</p></details>
+<details><summary>5. Perpindahan energi</summary><p>Saat p(t) &gt; 0 sumber menyuplai energi; sebagian disimpan di L atau C. Saat p(t) &lt; 0 energi tersimpan dikembalikan ke sumber atau ke elemen lain. Resistor selalu menyerap (p ≥ 0).</p></details>
+<details><summary>6. Mengapa memakai daya kompleks</summary><p>S = V I* menyimpan P dan Q sekaligus dengan tanda yang benar, sehingga penjumlahan aljabar S seluruh elemen valid. Menjumlahkan |S| langsung salah karena sudut fasenya berbeda.</p></details>
+<details><summary>7. Membaca grafik</summary><p>Gelombang: bandingkan puncak i(t) dengan v(t); jika i puncak lebih dulu, arus mendahului. Fasor: sudut antara V dan I adalah φ. Segitiga daya: P mendatar, Q tegak (atas = induktif), S sisi miring, sudut = φ.</p></details>
+<details><summary>8. Membuktikan keseimbangan dari simulasi</summary><p>Lihat tabel keseimbangan: sumber bernilai negatif (memberi daya), elemen lain positif untuk P (R) atau berlawanan tanda untuk Q (L positif, C negatif). Jumlah kolom P dan Q harus 0 dalam toleransi numerik, dan lencana status berubah hijau.</p></details>
+</div>
+<div id="p_eks" class="pane" hidden><div id="exps"></div><button id="bTest">Jalankan uji otomatis rumus</button><pre id="testOut"></pre></div>
+<div id="p_kuis" class="pane" hidden><div id="qz"></div><div class="btns"><button id="qChk">Periksa jawaban</button><button id="qRst">Ulangi kuis</button></div><p id="qScore" class="big"></p></div>
+<div id="p_tan" class="pane" hidden><label for="chs">Pilih tantangan</label><select id="chs"></select><p id="chq"></p><p id="chst" class="big"></p></div>
+</div>
+<footer>Simulasi berjalan sepenuhnya di browser. Perhitungan memakai fasor RMS dan konvensi tanda pasif.</footer>
+<script src="script.js"></script>
+</body>
+</html>
